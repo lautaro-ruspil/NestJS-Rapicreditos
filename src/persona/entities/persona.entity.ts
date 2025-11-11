@@ -64,8 +64,8 @@ export class Persona {
   @Column({ type: 'boolean', default: false })
   creditos_activos: boolean; // Bandera si tiene creditos activo o no, por defecto no (False)
 
-  @Column({ type: 'boolean', default: false })
-  estado_postulante: boolean; // Bandera para saber si es postulante o no, por defecto es postulante(False)
+  @Column({ type: 'boolean', default: true })
+  estado_postulante: boolean; // Bandera para saber si es postulante o no, por defecto es postulante(True)
 
   @Column({ type: 'varchar', default: 'Al día', length: 20 })
   estado_cuenta_cliente: string;

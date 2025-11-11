@@ -7,14 +7,17 @@ import {
   Matches,
   IsOptional,
   IsEmail,
+  IsNumber,
 } from 'class-validator';
 
 export class CreatePersonaDto {
   // Nombre
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(2)
-  @MaxLength(100)
+  @IsNotEmpty({ message: 'El nombre no puede estar vacío' })
+  @IsString({ message: 'El nombre debe ser un string' })
+  @MinLength(2, { message: 'El nombre debe tener al menos 2 caracteres' })
+  @MaxLength(100, {
+    message: 'El nombre debe tener como máximo 100 caracteres',
+  })
   nombres: string;
 
   // Apellido
@@ -111,4 +114,7 @@ export class CreatePersonaDto {
   @IsString()
   @MaxLength(256)
   foto_recibo_sueldo: string;
+
+  @IsNumber()
+  sueldo: number;
 }

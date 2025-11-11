@@ -1,12 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { PersonaService } from './persona.service';
 import { CreatePersonaDto } from './dto/create-persona.dto';
 import { UpdatePersonaDto } from './dto/update-persona.dto';
 
+// 'https:/rapicreditos/persona'
 @Controller('persona')
 export class PersonaController {
   constructor(private readonly personaService: PersonaService) {}
 
+  // Falta agregar framework para procesar las imagenes como URLs
   @Post()
   create(@Body() createPersonaDto: CreatePersonaDto) {
     return this.personaService.create(createPersonaDto);
@@ -17,8 +27,9 @@ export class PersonaController {
     return this.personaService.findAll();
   }
 
+  // 'https:/rapicreditos/persona/1'
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.personaService.findOne(+id);
   }
 

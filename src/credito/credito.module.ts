@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { CreditoService } from './credito.service';
 import { CreditoController } from './credito.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Credito } from './entities/credito.entity';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([Credito])],
   controllers: [CreditoController],
   providers: [CreditoService],
 })
