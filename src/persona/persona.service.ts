@@ -80,7 +80,21 @@ export class PersonaService {
     return `This action updates a #${id} persona`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} persona`;
+  async remove(id: number) {
+    try {
+      const persona = await this.findOne(id);
+      this.personaRepository.delete(id);
+      return {
+        statusCode: 200,
+        msg: 'Persona eliminada correctamente',
+        data: persona,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        `No se pudo eliminar la persona con el id: ${id}`,
+        500,
+      );
+    }
   }
 }
