@@ -65,6 +65,7 @@ export class PersonaService {
       // Busqueda de una persona sola por ID
       const persona = await this.personaRepository.findOne({
         where: { id_persona: id },
+        relations: ['persona', 'pago'],
       });
 
       if (!persona) {

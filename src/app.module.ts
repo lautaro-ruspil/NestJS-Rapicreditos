@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PersonaModule } from './persona/persona.module';
 import { CreditoModule } from './credito/credito.module';
 import { ContactoModule } from './contacto/contacto.module';
+import { PagoModule } from './pago/pago.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ContactoModule } from './contacto/contacto.module';
     PersonaModule,
     CreditoModule,
     ContactoModule,
+    PagoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

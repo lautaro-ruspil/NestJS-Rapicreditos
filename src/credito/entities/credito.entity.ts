@@ -1,3 +1,4 @@
+import { Pago } from 'src/pago/entities/pago.entity';
 import { Persona } from 'src/persona/entities/persona.entity';
 import {
   Entity,
@@ -5,6 +6,7 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 @Entity('credito')
 export class Credito {
@@ -36,4 +38,12 @@ export class Credito {
   )
   @JoinColumn({ name: 'id_persona' })
   persona: Persona;
+
+  @OneToMany(
+    () => Pago,
+    (pago) => {
+      pago.credito;
+    },
+  )
+  pagos: Pago[];
 }
