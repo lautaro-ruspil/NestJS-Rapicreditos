@@ -1,4 +1,5 @@
 import { Credito } from 'src/credito/entities/credito.entity';
+import { Pago } from 'src/pago/entities/pago.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -75,4 +76,7 @@ export class Persona {
 
   @OneToMany(() => Credito, (credito) => credito.persona)
   creditos: Credito[];
+
+  @OneToMany(() => Pago, (pago) => pago.persona)
+  pagos: Pago[];
 }
