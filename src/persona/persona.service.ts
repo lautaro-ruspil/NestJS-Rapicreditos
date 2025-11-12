@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePersonaDto } from './dto/create-persona.dto';
 import { UpdatePersonaDto } from './dto/update-persona.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,15 +11,19 @@ export class PersonaService {
     @InjectRepository(Persona)
     private readonly personaRepository: Repository<Persona>,
   ) {}
-  // Poner el tipo de dato que va a retornar la funcion
-  async create(createPersonaDto: CreatePersonaDto) {
+
+  // Manejar la subida de archivos y manejar la encriptación de la password
+  async create(createPersonaDto: CreatePersonaDto): Promise<{
+    statusCode: number;
+    msg: string;
+    data: Persona;
+  }> {
     try {
-      console.log(createPersonaDto);
       const newPerson = this.personaRepository.create(createPersonaDto);
       const savedPerson = await this.personaRepository.save(newPerson);
 
       return {
-        statusCode: 201,
+        statusCode: HttpStatus.OK,
         msg: 'Persona registrada correctamente',
         data: savedPerson,
       };
@@ -29,14 +33,17 @@ export class PersonaService {
     }
   }
 
-  async findAll() {
+  async findAll(): Promise<{
+    statusCode: number;
+    msg: string;
+    data: Persona[];
+  }> {
     try {
       // Busqueda condicional ver filtrado
       const personas: Persona[] = await this.personaRepository.find();
 
-      console.log(personas);
       return {
-        statusCode: 200,
+        statusCode: HttpStatus.OK,
         msg: 'Busqueda realizada correctamente',
         data: personas,
       };
@@ -49,7 +56,11 @@ export class PersonaService {
     }
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<{
+    statusCode: number;
+    msg: string;
+    data: Persona;
+  }> {
     try {
       // Busqueda de una persona sola por ID
       const persona = await this.personaRepository.findOne({
@@ -63,7 +74,7 @@ export class PersonaService {
         );
       }
       return {
-        statusCode: 200,
+        statusCode: HttpStatus.OK,
         msg: `Búsqueda realizada con éxito`,
         data: persona,
       };
@@ -76,16 +87,53 @@ export class PersonaService {
     }
   }
 
-  update(id: number, updatePersonaDto: UpdatePersonaDto) {
-    return `This action updates a #${id} persona`;
+  async update(
+    id: number,
+    updatePersonaDto: UpdatePersonaDto,
+  ): Promise<{
+    statusCode: number;
+    msg: string;
+    data: Persona;
+  }> {
+    try {
+      const persona = await this.personaRepository.preload({
+        id_persona: id,
+        ...updatePersonaDto,
+      });
+
+      if (!persona) {
+        throw new HttpException(
+          `No se encontró la persona con el id: ${id}`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const savedPersona = await this.personaRepository.save(persona);
+
+      return {
+        statusCode: HttpStatus.OK,
+        msg: `Persona con el ID ${id} actualizada correctamente`,
+        data: savedPersona,
+      };
+    } catch (error) {
+      console.error(`Error: ${error}`);
+      throw new HttpException(
+        `Error al actualizar a la persona con el id ${id}`,
+        500,
+      );
+    }
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<{
+    statusCode: number;
+    msg: string;
+    data: Persona;
+  }> {
     try {
-      const persona = await this.findOne(id);
-      this.personaRepository.delete(id);
+      const { data: persona } = await this.findOne(id);
+      await this.personaRepository.delete(id);
       return {
-        statusCode: 200,
+        statusCode: HttpStatus.OK,
         msg: 'Persona eliminada correctamente',
         data: persona,
       };
