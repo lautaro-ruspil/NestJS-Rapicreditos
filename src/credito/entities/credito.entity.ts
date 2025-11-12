@@ -25,8 +25,8 @@ export class Credito {
   @Column({ type: 'varchar', length: 100 })
   tipo_credito: string;
 
-  @Column({ type: 'varchar', length: 50 })
-  estado_credito: string;
+  @Column({ type: 'bool', default: false })
+  estado_credito: boolean;
 
   @ManyToOne(
     () => Persona,
